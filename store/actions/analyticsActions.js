@@ -25,8 +25,8 @@ export const virtualPageView = (pageProps) => {
   return {
     type: VIRTUAL_PAGE_VIEW,
     payload: {
-      event: "virtual_page_view",
-      page: pageProps,
+      tealium_event: "page_view",
+      ...pageProps,
     },
   }
 }

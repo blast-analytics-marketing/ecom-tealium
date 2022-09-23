@@ -130,55 +130,56 @@ const devtools = (process.browser && window.__REDUX_DEVTOOLS_EXTENSION__)
 
 //Analytics middleware for GTM
 const analyticsMiddleware = () => next => action => {
-  const sendEvents = (...events) => {
-    const dataLayer = window.dataLayer || [];
-    dataLayer.push(...events);
-    window.dataLayer = dataLayer;
-    const eventName = events[0].event;
-    const event = new Event(eventName);
-    document.dispatchEvent(event);
+  const sendEvents = (event, type) => {
+    if(type === "view") {
+      window.utag.view(event);
+    } else {
+      window.utag.link(event);
+    }
   };
   
   const { type, payload } = action;
 
   switch(type) {
     case "VIRTUAL_PAGE_VIEW":
-    case "TRACK_VIEW_ITEM_LIST":
-    case "TRACK_SELECT_ITEM":
-    case "TRACK_VIEW_ITEM":
-    case "TRACK_ADD_TO_CART":
-    case "TRACK_REMOVE_FROM_CART":
-    case "TRACK_VIEW_CART":
-    case "TRACK_BEGIN_CHECKOUT":
-    case "TRACK_ADD_SHIPPING_INFO":
-    case "TRACK_ADD_PAYMENT_INFO":
-    case "TRACK_PURCHASE":
-    case "TRACK_SELECT_PROMOTION":
-    case "TRACK_NAVIGATION_CLICK":
-    case "TRACK_LOGIN":
-      sendEvents({...payload, _clear: true});
+      sendEvents({...payload}, "view");
       break;
-    case "SET_CUSTOMER":
-      sendEvents({
-        event: "load_user_data",
-        user: {
-          user_id: payload.id,
-          logged_in: payload.isLoggedIn,
-          firstname: payload.firstname,
-          lastname: payload.lastname
-        },
-        _clear: true,
-      });
-      break;
-    case "CLEAR_CUSTOMER":
-      sendEvents({
-        event: "load_user_data",
-        user: {
-          logged_in: false,
-        },
-        _clear: true,
-      });
-      break;
+    // case "TRACK_VIEW_ITEM_LIST":
+    // case "TRACK_SELECT_ITEM":
+    // case "TRACK_VIEW_ITEM":
+    // case "TRACK_ADD_TO_CART":
+    // case "TRACK_REMOVE_FROM_CART":
+    // case "TRACK_VIEW_CART":
+    // case "TRACK_BEGIN_CHECKOUT":
+    // case "TRACK_ADD_SHIPPING_INFO":
+    // case "TRACK_ADD_PAYMENT_INFO":
+    // case "TRACK_PURCHASE":
+    // case "TRACK_SELECT_PROMOTION":
+    // case "TRACK_NAVIGATION_CLICK":
+    // case "TRACK_LOGIN":
+    //   sendEvents({...payload, _clear: true});
+    //   break;
+    // case "SET_CUSTOMER":
+    //   sendEvents({
+    //     event: "load_user_data",
+    //     user: {
+    //       user_id: payload.id,
+    //       logged_in: payload.isLoggedIn,
+    //       firstname: payload.firstname,
+    //       lastname: payload.lastname
+    //     },
+    //     _clear: true,
+    //   });
+    //   break;
+    // case "CLEAR_CUSTOMER":
+    //   sendEvents({
+    //     event: "load_user_data",
+    //     user: {
+    //       logged_in: false,
+    //     },
+    //     _clear: true,
+    //   });
+    //   break;
     default:
       //sendEvents({event: type, payload, _clear: true});
       break;

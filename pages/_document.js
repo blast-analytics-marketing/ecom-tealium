@@ -43,7 +43,8 @@ class MyDocument extends Document {
           <meta name="twitter:card" content="summary_large_image" />
           <script
             dangerouslySetInnerHTML={{
-              __html: `var utag_data = {}; window.utag_cfg_ovrd = {noview:true};`,
+              __html: `var utag_data = {};
+              window.utag_cfg_ovrd = {noview:true};`,
             }}
           />
           <script

@@ -144,44 +144,31 @@ const analyticsMiddleware = () => next => action => {
     case "VIRTUAL_PAGE_VIEW":
       sendEvents({...payload}, "view");
       break;
-    // case "TRACK_VIEW_ITEM_LIST":
-    // case "TRACK_SELECT_ITEM":
-    // case "TRACK_VIEW_ITEM":
-    // case "TRACK_ADD_TO_CART":
-    // case "TRACK_REMOVE_FROM_CART":
-    // case "TRACK_VIEW_CART":
-    // case "TRACK_BEGIN_CHECKOUT":
-    // case "TRACK_ADD_SHIPPING_INFO":
-    // case "TRACK_ADD_PAYMENT_INFO":
-    // case "TRACK_PURCHASE":
-    // case "TRACK_SELECT_PROMOTION":
-    // case "TRACK_NAVIGATION_CLICK":
-    // case "TRACK_LOGIN":
-    //   sendEvents({...payload, _clear: true});
-    //   break;
-    // case "SET_CUSTOMER":
-    //   sendEvents({
-    //     event: "load_user_data",
-    //     user: {
-    //       user_id: payload.id,
-    //       logged_in: payload.isLoggedIn,
-    //       firstname: payload.firstname,
-    //       lastname: payload.lastname
-    //     },
-    //     _clear: true,
-    //   });
-    //   break;
-    // case "CLEAR_CUSTOMER":
-    //   sendEvents({
-    //     event: "load_user_data",
-    //     user: {
-    //       logged_in: false,
-    //     },
-    //     _clear: true,
-    //   });
-    //   break;
+    case "TRACK_VIEW_ITEM_LIST":
+    case "TRACK_SELECT_ITEM":
+    case "TRACK_VIEW_ITEM":
+    case "TRACK_ADD_TO_CART":
+    case "TRACK_REMOVE_FROM_CART":
+    case "TRACK_VIEW_CART":
+    case "TRACK_BEGIN_CHECKOUT":
+    case "TRACK_ADD_SHIPPING_INFO":
+    case "TRACK_ADD_PAYMENT_INFO":
+    case "TRACK_PURCHASE":
+    case "TRACK_SELECT_PROMOTION":
+    case "TRACK_NAVIGATION_CLICK":
+    case "TRACK_LOGIN":
+      sendEvents({...payload});
+      break;
+    case "SET_CUSTOMER":
+      sendEvents({
+        tealium_event: "load_user_data",
+        user_id: payload.id,
+        logged_in: payload.isLoggedIn,
+      });
+      break;
+    case "CLEAR_CUSTOMER":
+      break;
     default:
-      //sendEvents({event: type, payload, _clear: true});
       break;
   }
 

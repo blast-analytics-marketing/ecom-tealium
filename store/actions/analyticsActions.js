@@ -36,9 +36,22 @@ export const virtualPageView = (pageProps) => {
  */
 export const viewItemList = (products, list) => {
   const ecomObj =  {
-    items: []
+    item_list_id: [],
+    item_list_name: [],
+    item_id : [],
+    item_name: [],
+    item_index: [],
+    item_brand: [],
+    item_variant: [],
+    item_price: [],
+    item_category: [],
+    item_category2: [],
+    item_category3: [],
+    item_category4: [],
+    item_category5: [],
+    currency: "USD",
   };
-  ecomObj.items = products.map((
+  products.forEach((
     {
       name,
       id,
@@ -48,25 +61,21 @@ export const viewItemList = (products, list) => {
     },
     index
   ) => {
-    const prod =  {
-      item_id: id,
-      item_name: name,
-      currency: 'USD',
-      index,
-      item_brand: "Blast",
-      price: parseFloat(price.formatted),
-      item_variant: `${variant_groups[0]?.name}: ${variant_groups[0]?.options[0]?.name}`,
-      item_list_id: list.id,
-      item_list_name: list.name,
-    };
-    categories.forEach((cat, i) => prod[i > 0 ? `item_category${i+1}` : 'item_category'] = cat.name);
-    return prod;
+    ecomObj.item_list_id.push(list.id || "");
+    ecomObj.item_list_name.push(list.name || "");
+    ecomObj.item_id.push(id || "");
+    ecomObj.item_name.push(name || "");
+    ecomObj.item_index.push(index || "");
+    ecomObj.item_brand.push("Blast" || "");
+    ecomObj.item_variant.push(`${variant_groups[0]?.name}: ${variant_groups[0]?.options[0]?.name}` || "");
+    ecomObj.item_price.push(parseFloat(price.formatted) || "");
+    categories.forEach((cat, i) => ecomObj[i > 0 ? `item_category${i+1}` : 'item_category'].push(cat.name));
   });
   return {
     type: TRACK_VIEW_ITEM_LIST,
     payload: {
-      event: "view_item_list",
-      ecommerce: ecomObj,
+      tealium_event: "view_item_list",
+      ...ecomObj,
     },
   }
 }
@@ -86,9 +95,22 @@ export const trackViewItemList = (products, list) => (dispatch) => {
  */
 export const trackSelectItem = (products, position, list) => {
   const ecomObj =  {
-    items: []
+    item_list_id: [],
+    item_list_name: [],
+    item_id : [],
+    item_name: [],
+    item_index: [],
+    item_brand: [],
+    item_variant: [],
+    item_price: [],
+    item_category: [],
+    item_category2: [],
+    item_category3: [],
+    item_category4: [],
+    item_category5: [],
+    currency: "USD",
   };
-  ecomObj.items = products.map((
+  products.forEach((
     {
       name,
       id,
@@ -97,25 +119,21 @@ export const trackSelectItem = (products, position, list) => {
       variant_groups,
     }
   ) => {
-    const prod =  {
-      item_id: id,
-      item_name: name,
-      currency: 'USD',
-      index: position,
-      item_brand: "Blast",
-      price: parseFloat(price.formatted),
-      item_variant: `${variant_groups[0]?.name}: ${variant_groups[0]?.options[0]?.name}`,
-      item_list_id: list.id,
-      item_list_name: list.name,
-    };
-    categories.forEach((cat, i) => prod[i > 0 ? `item_category${i+1}` : 'item_category'] = cat.name);
-    return prod;
+    ecomObj.item_list_id.push(list.id || "");
+    ecomObj.item_list_name.push(list.name || "");
+    ecomObj.item_id.push(id || "");
+    ecomObj.item_name.push(name || "");
+    ecomObj.item_index.push(position || "");
+    ecomObj.item_brand.push("Blast" || "");
+    ecomObj.item_variant.push(`${variant_groups[0]?.name}: ${variant_groups[0]?.options[0]?.name}` || "");
+    ecomObj.item_price.push(parseFloat(price.formatted) || "");
+    categories.forEach((cat, i) => ecomObj[i > 0 ? `item_category${i+1}` : 'item_category'].push(cat.name));
   });
   return {
     type: TRACK_SELECT_ITEM,
     payload: {
-      event: "select_item",
-      ecommerce: ecomObj,
+      tealium_event: "select_item",
+      ...ecomObj,
     },
   }
 }
@@ -126,23 +144,24 @@ export const trackSelectItem = (products, position, list) => {
 export const trackViewItem = (product) => {
   const { name, id, price, categories, variant_groups } = product;
   const ecomObj =  {
-    items: []
+    item_id : [id || ""],
+    item_name: [name || ""],
+    item_brand: ["Blast" || ""],
+    item_variant: [`${variant_groups[0]?.name}: ${variant_groups[0]?.options[0]?.name}` || ""],
+    item_price: [parseFloat(price.formatted) || ""],
+    item_category: [],
+    item_category2: [],
+    item_category3: [],
+    item_category4: [],
+    item_category5: [],
+    currency: "USD",
   };
-  const prod = {
-    item_id: id,
-    item_name: name,
-    currency: 'USD',
-    item_brand: "Blast",
-    price: parseFloat(price.formatted),
-    item_variant: `${variant_groups[0]?.name}: ${variant_groups[0]?.options[0]?.name}`,
-  };
-  categories.forEach((cat, i) => prod[i > 0 ? `item_category${i+1}` : 'item_category'] = cat.name);
-  ecomObj.items.push(prod);
+  categories.forEach((cat, i) => ecomObj[i > 0 ? `item_category${i+1}` : 'item_category'].push(cat.name));
   return {
     type: TRACK_VIEW_ITEM,
     payload: {
-      event: "view_item",
-      ecommerce: ecomObj,
+      tealium_event: "view_item",
+      ...ecomObj,
     },
   }
 }
@@ -168,24 +187,25 @@ export const trackAddToCart = (product, quantity, selected_options) => {
     variant = createVariantFromGroups(selected_options);
   }
   const ecomObj =  {
-    items: []
+    item_id : [id || ""],
+    item_name: [name || ""],
+    item_brand: ["Blast" || ""],
+    item_variant: [variant || ""],
+    item_price: [parseFloat(price.formatted) || ""],
+    item_quantity: [quantity],
+    item_category: [],
+    item_category2: [],
+    item_category3: [],
+    item_category4: [],
+    item_category5: [],
+    currency: "USD",
   };
-  const prod = {
-    item_id: id,
-    item_name: name,
-    currency: 'USD',
-    item_brand: "Blast",
-    price: parseFloat(price.formatted),
-    item_variant: variant,
-    quantity
-  };
-  categories.forEach((cat, i) => prod[i > 0 ? `item_category${i+1}` : 'item_category'] = cat.name);
-  ecomObj.items.push(prod);
+  categories.forEach((cat, i) => ecomObj[i > 0 ? `item_category${i+1}` : 'item_category'].push(cat.name));
   return {
     type: TRACK_ADD_TO_CART,
     payload: {
-      event: "add_to_cart",
-      ecommerce: ecomObj,
+      tealium_event: "add_to_cart",
+      ...ecomObj,
     },
   }
 }
@@ -196,24 +216,25 @@ export const trackAddToCart = (product, quantity, selected_options) => {
 export const trackRemoveFromCart = (product, quantity, selected_options) => {
   const { name, id, price, categories } = product;
   const ecomObj =  {
-    items: []
+    item_id : [id || ""],
+    item_name: [name || ""],
+    item_brand: ["Blast" || ""],
+    item_variant: [selected_options.map(({group_name, option_name}) => `${group_name}: ${option_name}`).sort().join() || ""],
+    item_price: [parseFloat(price.formatted) || ""],
+    item_quantity: [quantity],
+    item_category: [],
+    item_category2: [],
+    item_category3: [],
+    item_category4: [],
+    item_category5: [],
+    currency: "USD",
   };
-  const prod = {
-    item_id: id,
-    item_name: name,
-    currency: 'USD',
-    item_brand: "Blast",
-    price: parseFloat(price.formatted),
-    item_variant: selected_options.map(({group_name, option_name}) => `${group_name}: ${option_name}`).sort().join(),
-    quantity
-  };
-  categories.forEach((cat, i) => prod[i > 0 ? `item_category${i+1}` : 'item_category'] = cat.name);
-  ecomObj.items.push(prod);
+  categories.forEach((cat, i) => ecomObj[i > 0 ? `item_category${i+1}` : 'item_category'].push(cat.name));
   return {
     type: TRACK_REMOVE_FROM_CART,
     payload: {
-      event: "remove_from_cart",
-      ecommerce: ecomObj,
+      tealium_event: "remove_from_cart",
+      ...ecomObj,
     },
   }
 }
@@ -224,9 +245,21 @@ export const trackRemoveFromCart = (product, quantity, selected_options) => {
 export const trackViewCart = (products, cart_id) => {
   const ecomObj =  {
     cart_id,
-    items: []
+    item_id : [],
+    item_name: [],
+    item_index: [],
+    item_brand: [],
+    item_variant: [],
+    item_price: [],
+    item_quantity: [],
+    item_category: [],
+    item_category2: [],
+    item_category3: [],
+    item_category4: [],
+    item_category5: [],
+    currency: "USD",
   };
-  ecomObj.items = products.map((
+  products.forEach((
     {
       name,
       id,
@@ -236,23 +269,19 @@ export const trackViewCart = (products, cart_id) => {
       selected_options,
     }
   ) => {
-    const prod =  {
-      item_id: id,
-      item_name: name,
-      currency: 'USD',
-      item_brand: "Blast",
-      price: parseFloat(price.formatted),
-      item_variant: selected_options.map(({group_name, option_name}) => `${group_name}: ${option_name}`).sort().join(),
-      quantity
-    };
-    categories.forEach((cat, i) => prod[i > 0 ? `item_category${i+1}` : 'item_category'] = cat.name);
-    return prod;
+    ecomObj.item_id.push(id || "");
+    ecomObj.item_name.push(name || "");
+    ecomObj.item_brand.push("Blast" || "");
+    ecomObj.item_variant.push(selected_options.map(({group_name, option_name}) => `${group_name}: ${option_name}`).sort().join() || "");
+    ecomObj.item_price.push(parseFloat(price.formatted) || "");
+    ecomObj.item_quantity.push(quantity || "");
+    categories.forEach((cat, i) => ecomObj[i > 0 ? `item_category${i+1}` : 'item_category'].push(cat.name));
   });
   return {
     type: TRACK_VIEW_CART,
     payload: {
-      event: "view_cart",
-      ecommerce: ecomObj,
+      tealium_event: "view_cart",
+      ...ecomObj,
     },
   }
 }
@@ -263,9 +292,21 @@ export const trackViewCart = (products, cart_id) => {
 export const trackBeginCheckout = (products, cart_id) => {
   const ecomObj =  {
     cart_id,
-    items: []
+    item_id : [],
+    item_name: [],
+    item_index: [],
+    item_brand: [],
+    item_variant: [],
+    item_price: [],
+    item_quantity: [],
+    item_category: [],
+    item_category2: [],
+    item_category3: [],
+    item_category4: [],
+    item_category5: [],
+    currency: "USD",
   };
-  ecomObj.items = products.map((
+  products.forEach((
     {
       name,
       id,
@@ -275,23 +316,19 @@ export const trackBeginCheckout = (products, cart_id) => {
       selected_options,
     }
   ) => {
-    const prod =  {
-      item_id: id,
-      item_name: name,
-      currency: 'USD',
-      item_brand: "Blast",
-      price: parseFloat(price.formatted),
-      item_variant: selected_options.map(({group_name, option_name}) => `${group_name}: ${option_name}`).sort().join(),
-      quantity
-    };
-    categories.forEach((cat, i) => prod[i > 0 ? `item_category${i+1}` : 'item_category'] = cat.name);
-    return prod;
+    ecomObj.item_id.push(id || "");
+    ecomObj.item_name.push(name || "");
+    ecomObj.item_brand.push("Blast" || "");
+    ecomObj.item_variant.push(selected_options.map(({group_name, option_name}) => `${group_name}: ${option_name}`).sort().join() || "");
+    ecomObj.item_price.push(parseFloat(price.formatted) || "");
+    ecomObj.item_quantity.push(quantity || "");
+    categories.forEach((cat, i) => ecomObj[i > 0 ? `item_category${i+1}` : 'item_category'].push(cat.name));
   });
   return {
     type: TRACK_BEGIN_CHECKOUT,
     payload: {
-      event: "begin_checkout",
-      ecommerce: ecomObj,
+      tealium_event: "begin_checkout",
+      ...ecomObj,
     },
   }
 }
@@ -304,9 +341,21 @@ export const trackAddShippingInfo = (products, cart_id, shipping_tier) => {
   const ecomObj =  {
     shipping_tier: `${description} - ${price.formatted_with_code}`,
     cart_id,
-    items: []
+    item_id : [],
+    item_name: [],
+    item_index: [],
+    item_brand: [],
+    item_variant: [],
+    item_price: [],
+    item_quantity: [],
+    item_category: [],
+    item_category2: [],
+    item_category3: [],
+    item_category4: [],
+    item_category5: [],
+    currency: "USD",
   };
-  ecomObj.items = products.map((
+  products.forEach((
     {
       name,
       id,
@@ -316,23 +365,19 @@ export const trackAddShippingInfo = (products, cart_id, shipping_tier) => {
       selected_options,
     }
   ) => {
-    const prod =  {
-      item_id: id,
-      item_name: name,
-      currency: 'USD',
-      item_brand: "Blast",
-      price: parseFloat(price.formatted),
-      item_variant: selected_options.map(({group_name, option_name}) => `${group_name}: ${option_name}`).sort().join(),
-      quantity
-    };
-    categories.forEach((cat, i) => prod[i > 0 ? `item_category${i+1}` : 'item_category'] = cat.name);
-    return prod;
+    ecomObj.item_id.push(id || "");
+    ecomObj.item_name.push(name || "");
+    ecomObj.item_brand.push("Blast" || "");
+    ecomObj.item_variant.push(selected_options.map(({group_name, option_name}) => `${group_name}: ${option_name}`).sort().join() || "");
+    ecomObj.item_price.push(parseFloat(price.formatted) || "");
+    ecomObj.item_quantity.push(quantity || "");
+    categories.forEach((cat, i) => ecomObj[i > 0 ? `item_category${i+1}` : 'item_category'].push(cat.name));
   });
   return {
     type: TRACK_ADD_SHIPPING_INFO,
     payload: {
-      event: "add_shipping_info",
-      ecommerce: ecomObj,
+      tealium_event: "add_shipping_info",
+      ...ecomObj,
     },
   }
 }
@@ -343,9 +388,21 @@ export const trackAddShippingInfo = (products, cart_id, shipping_tier) => {
 export const trackAddPaymentInfo = (products, cart_id) => {
   const ecomObj =  {
     cart_id,
-    items: []
+    item_id : [],
+    item_name: [],
+    item_index: [],
+    item_brand: [],
+    item_variant: [],
+    item_price: [],
+    item_quantity: [],
+    item_category: [],
+    item_category2: [],
+    item_category3: [],
+    item_category4: [],
+    item_category5: [],
+    currency: "USD",
   };
-  ecomObj.items = products.map((
+  products.forEach((
     {
       name,
       id,
@@ -355,23 +412,19 @@ export const trackAddPaymentInfo = (products, cart_id) => {
       selected_options,
     }
   ) => {
-    const prod =  {
-      item_id: id,
-      item_name: name,
-      currency: 'USD',
-      item_brand: "Blast",
-      price: parseFloat(price.formatted),
-      item_variant: selected_options.map(({group_name, option_name}) => `${group_name}: ${option_name}`).sort().join(),
-      quantity
-    };
-    categories.forEach((cat, i) => prod[i > 0 ? `item_category${i+1}` : 'item_category'] = cat.name);
-    return prod;
+    ecomObj.item_id.push(id || "");
+    ecomObj.item_name.push(name || "");
+    ecomObj.item_brand.push("Blast" || "");
+    ecomObj.item_variant.push(selected_options.map(({group_name, option_name}) => `${group_name}: ${option_name}`).sort().join() || "");
+    ecomObj.item_price.push(parseFloat(price.formatted) || "");
+    ecomObj.item_quantity.push(quantity || "");
+    categories.forEach((cat, i) => ecomObj[i > 0 ? `item_category${i+1}` : 'item_category'].push(cat.name));
   });
   return {
     type: TRACK_ADD_PAYMENT_INFO,
     payload: {
-      event: "add_payment_info",
-      ecommerce: ecomObj,
+      tealium_event: "add_payment_info",
+      ...ecomObj,
     },
   }
 }
@@ -393,9 +446,22 @@ export const trackPurchase = (products, orderReceipt) => {
     tax: parseFloat(orderReceipt.tax.amount.formatted),
     shipping: parseFloat(orderReceipt.order.shipping.price.formatted),
     cart_id: orderReceipt.cart_id,
-    items: []
+    item_list_id: [],
+    item_list_name: [],
+    item_id : [],
+    item_name: [],
+    item_index: [],
+    item_brand: [],
+    item_variant: [],
+    item_price: [],
+    item_quantity: [],
+    item_category: [],
+    item_category2: [],
+    item_category3: [],
+    item_category4: [],
+    item_category5: [],
   };
-  ecomObj.items = products.map((
+  products.forEach((
     {
       name,
       id,
@@ -405,23 +471,19 @@ export const trackPurchase = (products, orderReceipt) => {
       selected_options,
     }
   ) => {
-    const prod =  {
-      item_id: id,
-      item_name: name,
-      currency: 'USD',
-      item_brand: "Blast",
-      price: parseFloat(price.formatted),
-      item_variant: selected_options.map(({group_name, option_name}) => `${group_name}: ${option_name}`).sort().join(),
-      quantity
-    };
-    categories.forEach((cat, i) => prod[i > 0 ? `item_category${i+1}` : 'item_category'] = cat.name);
-    return prod;
+    ecomObj.item_id.push(id || "");
+    ecomObj.item_name.push(name || "");
+    ecomObj.item_brand.push("Blast" || "");
+    ecomObj.item_variant.push(selected_options.map(({group_name, option_name}) => `${group_name}: ${option_name}`).sort().join() || "");
+    ecomObj.item_price.push(parseFloat(price.formatted) || "");
+    ecomObj.item_quantity.push(quantity || "");
+    categories.forEach((cat, i) => ecomObj[i > 0 ? `item_category${i+1}` : 'item_category'].push(cat.name));
   });
   return {
     type: TRACK_PURCHASE,
     payload: {
-      event: "purchase",
-      ecommerce: ecomObj,
+      tealium_event: "purchase",
+      ...ecomObj,
     },
   }
 }
@@ -430,20 +492,18 @@ export const trackPurchase = (products, orderReceipt) => {
  * Send the select promotion, promotion data
  */
 export const trackSelectPromotion = (promotion_id, promotion_name, creative_name, creative_slot, location_id) => {
-  const ecomObj =  {
-    items: [{
-      promotion_id,
-      promotion_name,
-      creative_name,
-      creative_slot,
-      location_id,
-    }]
+  const ecomObj = {
+    promotion_id: [promotion_id || ""],
+    promotion_name: [promotion_name || ""],
+    creative_name: [creative_name || ""],
+    creative_slot: [creative_slot || ""],
+    location_id: [location_id || ""]
   };
   return {
     type: TRACK_SELECT_PROMOTION,
     payload: {
-      event: "select_promotion",
-      ecommerce: ecomObj,
+      tealium_event: "select_promotion",
+      ...ecomObj,
     },
   }
 }
@@ -456,7 +516,7 @@ export const trackNavigationClick = (link_name) => {
   return {
     type: TRACK_NAVIGATION_CLICK,
     payload: {
-      event: "navigation_click",
+      tealium_event: "navigation_click",
       link_name
     },
   }
@@ -469,7 +529,7 @@ export const trackLogin = () => {
   return {
     type: TRACK_LOGIN,
     payload: {
-      event: "login",
+      tealium_event: "login",
     },
   }
 }

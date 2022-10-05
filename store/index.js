@@ -131,10 +131,14 @@ const devtools = (process.browser && window.__REDUX_DEVTOOLS_EXTENSION__)
 //Analytics middleware for GTM
 const analyticsMiddleware = () => next => action => {
   const sendEvents = (event, type) => {
-    if(type === "view") {
-      window.utag.view(event);
-    } else {
-      window.utag.link(event);
+    try {
+      if(type === "view") {
+        window.utag.view(event);
+      } else {
+        window.utag.link(event);
+      }
+    } catch(err) {
+      console.error(err);
     }
   };
   

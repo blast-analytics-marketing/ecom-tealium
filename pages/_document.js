@@ -43,8 +43,39 @@ class MyDocument extends Document {
           <meta name="twitter:card" content="summary_large_image" />
           <script
             dangerouslySetInnerHTML={{
-              __html: `var utag_data = {};
-              window.utag_cfg_ovrd = {noview:true};`,
+              __html: `
+              var utag_data = {};
+              var pdpRegex = new RegExp('^\/product\/(.*)\/?$', 'i');
+              if(window.location.pathname === '/') {
+                  utag_data = {
+                    page_name: 'Home',
+                    page_category: 'Content',
+                  };
+                } else if(window.location.pathname === '/about') {
+                  utag_data = {
+                    page_name: 'About',
+                    page_category: 'Content',
+                  };
+                } else if(window.location.pathname === '/collection') {
+                  utag_data = {
+                    page_name: 'Shop All',
+                    page_category: 'PLP',
+                  };
+                } else if(pdpRegex.test(window.location.pathname)) {
+                  var urlParts = window.location.pathname.split('/');
+                  var pageName = urlParts[2].split('-').map(item => item.charAt(0).toUpperCase() + item.slice(1)).join(' ');
+                  utag_data = {
+                    page_name: pageName,
+                    page_category: 'PDP',
+                  };
+                } else if(window.location.pathname === '/login') {
+                  utag_data = {
+                    page_name: 'Login',
+                    page_category: 'Account',
+                  };
+                }
+                console.log("initial data layer definition", JSON.parse(JSON.stringify(utag_data)))
+              `,
             }}
           />
           <script

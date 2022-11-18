@@ -15,6 +15,7 @@ const MyApp = ({Component, pageProps}) => {
 
   const store = useStore(pageProps.initialState);
   const [stripePromise, setStripePromise] = useState(null);
+  const [pageLoadedOnce, setPageLoadedOnce] = useState(false);
   const router = useRouter()
 
   useEffect(() => {
@@ -41,8 +42,11 @@ const MyApp = ({Component, pageProps}) => {
         page_title: pageProps.title,
       };
     }
-    store.dispatch(virtualPageView(pageData))
-
+    if(pageLoadedOnce) {
+      console.log('virtual page view')
+      store.dispatch(virtualPageView(pageData))
+    }
+    setPageLoadedOnce(true);
 
   }, [pageProps])
 
